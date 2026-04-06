@@ -27,14 +27,39 @@
   <script src="app.js"></script>
 </body>
 let map = document.getElementById("map");
+  
 document.getElementById("btnAdd").addEventListener("click", function() {
   let marker = document.createElement("div");
   marker.className = "marker";
+  
   marker.style.left = Math.random() * 380 + "px";
   marker.style.top = Math.random() * 380 + "px";
+  
   map.appendChild(marker);
+  
   marker.addEventListener("click", function() {
     alert("Marker clicked!");
   });
 });
+  
+class Marker {
+  constructor(x, y) {
+    this.element = document.createElement("div");
+    this.element.className = "marker";
+    this.element.style.left = x + "px";
+    this.element.style.top = y + "px";
+    this.element.addEventListener("click", () => this.onClick());
+  }
+  onClick() {
+    alert("Marker at " + this.element.style.left);
+  }
+  addTo(map) {
+    map.appendChild(this.element);
+  }
+}
+
+let m1 = new Marker (100, 150);
+let m2 = new Marker (200, 250);
+m1.addTo(map);
+m2.addTo(map);
 </html>
