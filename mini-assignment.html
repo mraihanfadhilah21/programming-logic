@@ -29,7 +29,6 @@
   <h2>Mini WebGIS</h2>
   <P>Nama: Muhammad Raihan Fadhilah | NIM : 24/539466/SV/24606</P>
   <!-- Controls -->
-  <button id="btnAdd">Add Marker</button>
   <button id="btnClear">Clear All Markers</button>
 
   <select id="markerType">
@@ -88,11 +87,11 @@
     }
 
     // Add Marker
-    document.getElementById("btnAdd").addEventListener("click", function() {
+    map.addEventListener("click", function(e) {
       let type = document.getElementById("markerType").value;
 
-      let x = Math.random() * 380;
-      let y = Math.random() * 380;
+      let x = e.offsetX;
+      let y = e.offsetY;
 
       let marker = new Marker(x, y, type);
       marker.addTo(map);
