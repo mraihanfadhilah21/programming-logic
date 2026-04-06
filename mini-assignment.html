@@ -4,64 +4,131 @@
     <title>Mini WebGIS</title>
     <style>
       #map {
-        width: 10%;
+        width: 100%;
         height: 400px;
         background: linear-gradient(to bottom, lightblue, lightgreen);
         position: relative;
         border: 1px solid #ccc;
       }
+  
       .marker {
         width: 12px;
         height: 12px;
-        background: red;
         position: absolute;
         border-radius: 50%;
         cursor: pointer;
       }
+  
+      .red { background: red; }
+      .blue { background: blue; }
+      .green { background: green; }
     </style>
   </head>
+  
   <body>
     <h2>Mini WebGIS</h2>
+  
+    <!-- Controls -->
     <button id="btnAdd">Add Marker</button>
+    <button id="btnClear">Clear All Markers</button>
+  
+    <select id="markerType">
+      <option value="red">Red (A)</option>
+      <option value="blue">Blue (B)</option>
+      <option value="green">Green (C)</option>
+    </select>
+  
+    <br><br>
+  
+    <!-- Layer Toggle -->
+    <label><input type="checkbox" id="toggleRed" checked> Red</label>
+    <label><input type="checkbox" id="toggleBlue" checked> Blue</label>
+    <label><input type="checkbox" id="toggleGreen" checked> Green</label>
+  
     <div id="map"></div>
+  
     <script>
-    let map = document.getElementById("map");
-    
-    document.getElementById("btnAdd").addEventListener("click", function() {
-      let marker = document.createElement("div");
-      marker.className = "marker";
-      
-      marker.style.left = Math.random() * 380 + "px";
-      marker.style.top = Math.random() * 380 + "px";
-      
-      map.appendChild(marker);
-      
-      marker.addEventListener("click", function() {
-        alert("Marker clicked!");
+      let map = document.getElementById("map");
+  
+      // Simpan semua marker
+      let allMarkers = [];
+  
+      class Marker {
+        constructor(x, y, type) {
+          this.type = type;
+  
+          this.element = document.createElement("div");
+          this.element.className = "marker " + type;
+  
+          this.element.style.left = x + "px";
+          this.element.style.top = y + "px";
+  
+          this.element.addEventListener("click", () => this.onClick());
+        }
+  
+        onClick() {
+          alert("Marker " + this.type + " at " + this.element.style.left);
+        }
+  
+        addTo(map) {
+          map.appendChild(this.element);
+        }
+  
+        remove() {
+          this.element.remove();
+        }
+  
+        show() {
+          this.element.style.display = "block";
+        }
+  
+        hide() {
+          this.element.style.display = "none";
+        }
+      }
+  
+      // Add Marker
+      document.getElementById("btnAdd").addEventListener("click", function() {
+        let type = document.getElementById("markerType").value;
+  
+        let x = Math.random() * 380;
+        let y = Math.random() * 380;
+  
+        let marker = new Marker(x, y, type);
+        marker.addTo(map);
+  
+        allMarkers.push(marker);
       });
-    });
-      
-    class Marker {
-      constructor(x, y) {
-        this.element = document.createElement("div");
-        this.element.className = "marker";
-        this.element.style.left = x + "px";
-        this.element.style.top = y + "px";
-        this.element.addEventListener("click", () => this.onClick());
+  
+      // Clear All
+      document.getElementById("btnClear").addEventListener("click", function() {
+        allMarkers.forEach(m => m.remove());
+        allMarkers = [];
+      });
+  
+      // Toggle Layer
+      function updateVisibility() {
+        let showRed = document.getElementById("toggleRed").checked;
+        let showBlue = document.getElementById("toggleBlue").checked;
+        let showGreen = document.getElementById("toggleGreen").checked;
+  
+        allMarkers.forEach(m => {
+          if (
+            (m.type === "red" && showRed) ||
+            (m.type === "blue" && showBlue) ||
+            (m.type === "green" && showGreen)
+          ) {
+            m.show();
+          } else {
+            m.hide();
+          }
+        });
       }
-      onClick() {
-        alert("Marker at " + this.element.style.left);
-      }
-      addTo(map) {
-        map.appendChild(this.element);
-      }
-    }
-    
-    let m1 = new Marker (100, 150);
-    let m2 = new Marker (200, 250);
-    m1.addTo(map);
-    m2.addTo(map);
-     
+  
+      document.getElementById("toggleRed").onchange = updateVisibility;
+      document.getElementById("toggleBlue").onchange = updateVisibility;
+      document.getElementById("toggleGreen").onchange = updateVisibility;
+  
     </script>
   </body>
 </html>
