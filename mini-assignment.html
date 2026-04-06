@@ -10,7 +10,6 @@
         position: relative;
         border: 1px solid #ccc;
       }
-  
       .marker {
         width: 12px;
         height: 12px;
@@ -18,13 +17,11 @@
         border-radius: 50%;
         cursor: pointer;
       }
-  
       .red { background: red; }
       .blue { background: blue; }
       .green { background: green; }
     </style>
   </head>
-  
   <body>
     <h2>Mini WebGIS</h2>
   
@@ -65,23 +62,18 @@
   
           this.element.addEventListener("click", () => this.onClick());
         }
-  
         onClick() {
           alert("Marker " + this.type + " at " + this.element.style.left);
         }
-  
         addTo(map) {
           map.appendChild(this.element);
         }
-  
         remove() {
           this.element.remove();
         }
-  
         show() {
           this.element.style.display = "block";
         }
-  
         hide() {
           this.element.style.display = "none";
         }
@@ -91,8 +83,8 @@
       document.getElementById("btnAdd").addEventListener("click", function() {
         let type = document.getElementById("markerType").value;
   
-        let x = Math.random() * 380;
-        let y = Math.random() * 380;
+        let x = e.offsetX;
+        let y = e.offsetY;
   
         let marker = new Marker(x, y, type);
         marker.addTo(map);
